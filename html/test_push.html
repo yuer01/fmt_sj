@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>云API</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav">极光推送</header>
+    <br>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="registrationId" value="160a3797c82a6c5e094" id="input1">
+                    </div>
+                </div>
+                <p>
+                    <div class="aui-btn aui-btn-info aui-btn-block" tapmode onclick="submit1();" style="width: 40%">推送我自己</div>
+                </p>
+            </li>
+            <br>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="registrationId" value="13065ffa4e234f67514" id="input2">
+                    </div>
+                </div>
+                <p>
+                    <div class="aui-btn aui-btn-info aui-btn-block" tapmode onclick="submit2();" style="width: 40%">推送天天模拟器</div>
+                </p>
+            </li>
+            <br>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="registrationId" value="190e35f7e01c9788f7d" id="input3">
+                    </div>
+                </div>
+                <p>
+                    <div class="aui-btn aui-btn-info aui-btn-block" tapmode onclick="submit3();" style="width: 40% ">推送我的手机</div>
+                </p>
+            </li>
+        </ul>
+    </div>
+    <div class="aui-btn aui-btn-info aui-btn-block" tapmode onclick="clearNotification();">清空推送栏</div><br>
+    <div class="aui-btn aui-btn-info aui-btn-block" tapmode onclick="getRegistrationId();">获取自己的RegistrationId</div>
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        //判断是Android还是IOS
+        //alert(api.systemType)
+        var ajpush = api.require('ajpush');
+        ajpush.init(function(ret) {
+            if (ret && ret.status) {
+                //注意安卓系统必须要这样
+            }
+        });
+
+        //监听推送消息内容，点击跳转
+        api.addEventListener({
+            name: 'appintent'
+        }, function(ret, err) {
+            if (ret && ret.appParam.ajpush) {
+                var ajpush = ret.appParam.ajpush;
+                var id = ajpush.id;
+                var title = ajpush.title;
+                var content = ajpush.content;
+                var extra = ajpush.extra;
+            }
+        })
+
+        //两个监听事件
+        api.addEventListener({
+            name: 'pause'
+        }, function(ret, err) {
+            onPause();
+            //监听应用进入后台，通知jpush暂停事件
+        })
+        api.addEventListener({
+            name: 'resume'
+        }, function(ret, err) {
+            onResume();
+            //监听应用恢复到前台，通知jpush恢复事件
+        })
+
+    }
+
+    //clearNotification  清空推送栏
+    function clearNotification() {
+        var ajpush = api.require('ajpush');
+        var param = {
+            id: -1
+        };
+        ajpush.clearNotification(param, function(ret) {
+            if (ret && ret.status) {
+                //success
+            }
+        });
+    }
+    //getRegistrationId 注册极光 获取registrationId
+    function getRegistrationId() {
+        var ajpush = api.require('ajpush');
+        ajpush.getRegistrationId(function(ret) {
+            var registrationId = ret.id;
+            //alert(registrationId)
+            console.log(registrationId)
+        });
+    }
+    //绑定用户 bindAliasAndTags 标签和别名
+    function bindAliasAndTags() {
+        var ajpush = api.require('ajpush');
+        var param = {
+            alias: 'hy',
+            tags: ['牛逼', '不牛逼']
+        };
+        ajpush.bindAliasAndTags(param, function(ret) {
+            var statusCode = ret.statusCode;
+            alert(JSON.stringify(ret) + "绑定返回")
+        });
+    }
+
+    //isPushStopped  查询当前推送服务是否停止。
+    function isPushStopped() {
+        var ajpush = api.require('ajpush');
+        ajpush.isPushStopped(function(ret) {
+            console.log(ret.isStopped)
+            if (ret && ret.isStopped) {
+                alert(ret.isStopped)
+            }
+        });
+    }
+    //onPause 通知极光推送SDK当前应用退入到后台。
+    function onPause() {
+        api.addEventListener({
+            name: 'pause'
+        }, function(ret, err) {
+            var ajpush = api.require('ajpush');
+            ajpush.onPause();
+        });
+    }
+    //onResume 通知极光推送SDK当前应用恢复到前台。
+    function onResume() {
+        api.addEventListener({
+            name: 'resume'
+        }, function(ret, err) {
+            var ajpush = api.require('ajpush');
+            ajpush.onResume();
+        });
+    }
+
+    function submit1() {
+        var input1 = document.getElementById('input1').value;
+        api.ajax({
+            url: 'http://541436.testyuming.top/index/index/push',
+            method: 'post',
+            timeout: 5,
+            data: {
+                values: {
+                    registrationId: input1
+                },
+                // files: {
+                //     file: 'fs://a.gif'
+                // }
+            }
+        }, function(ret, err) {
+            if (ret) {
+                console.log(JSON.stringify(ret));
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+
+    }
+    function submit2() {
+        var input2 = document.getElementById('input2').value;
+        api.ajax({
+            url: 'http://541436.testyuming.top/index/index/push',
+            method: 'post',
+            timeout: 5,
+            data: {
+                values: {
+                    registrationId: input2
+                },
+                // files: {
+                //     file: 'fs://a.gif'
+                // }
+            }
+        }, function(ret, err) {
+            if (ret) {
+                console.log(JSON.stringify(ret));
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+
+    }
+    function submit3() {
+        var input3 = document.getElementById('input3').value;
+        api.ajax({
+            url: 'http://541436.testyuming.top/index/index/push',
+            method: 'post',
+            timeout: 5,
+            data: {
+                values: {
+                    registrationId: input3
+                },
+                // files: {
+                //     file: 'fs://a.gif'
+                // }
+            }
+        }, function(ret, err) {
+            if (ret) {
+                console.log(JSON.stringify(ret));
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+
+    }
+</script>
+
+</html>

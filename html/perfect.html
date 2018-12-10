@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" href="../css/styleArea.css" />
+    <script src="http://www.jq22.com/jquery/1.11.1/jquery.min.js"></script>
+    <style>
+        .file {
+            background: url('../image/jia.png') no-repeat center;
+            width: 200px;
+            height: 200px;
+            opacity: 0;
+        }
+
+        .upload {
+            padding: 4px 10px;
+            width: 80px;
+            height: 80px;
+            background: url('../image/jia.png') no-repeat center;
+            text-decoration: none;
+            color: #666;
+        }
+
+        .change {
+            opacity: 0;
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <a class="aui-pull-left" onclick="javascript:window.history.go(-1);">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        完善资料
+    </header>
+
+    <div class="browser">
+
+        <section class="express-area">
+            <a id="expressArea" href="javascript:void(0)">
+                <dl>
+                    <dt>选择地区：</dt>
+                    <dd>省 > 市 > 区/县</dd>
+                </dl>
+            </a>
+        </section>
+
+        <section id="areaLayer" class="express-area-box">
+            <header>
+                <h3>选择地区</h3>
+                <a id="backUp" class="back" href="javascript:void(0)" title="返回"></a>
+                <a id="closeArea" class="close" href="javascript:void(0)" title="关闭"></a>
+            </header>
+            <article id="areaBox">
+                <ul id="areaList" class="area-list"></ul>
+            </article>
+        </section>
+        <div class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-form-list">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            详细地址
+                        </div>
+                        <div class="aui-list-item-input">
+                            <textarea placeholder="亲输入详细地址" name="name" rows="8" cols="80" id="textarea">
+                              </textarea>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <a href="javascript:;" class="upload">
+            <input class="change" type="file" multiple="multiple" onchange="fileup(event)" />
+        </a>
+        <div>营业执照</div>
+        <br>
+
+        <a href="javascript:;" class="upload">
+            <input class="change" type="file" multiple="multiple" onchange="fileup1(event)" />
+        </a>
+        <div>更改头像</div>
+
+        <br>
+        <input class="aui-btn aui-btn-info aui-btn-block" type="submit" value="确定" tapmode onclick="submit();">
+        <input type="text" name="" id="text" style="display: none;">
+
+    </div>
+
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script src="../script/jquery.area.js"></script>
+<script type="text/javascript">
+    //两个入口函数
+    apiready = function() {
+        $(document).ready(function() {
+
+        });
+    }
+    var upPath = '';
+
+    function fileup(e) {
+        var formData = new FormData();
+        formData.append('file', e.target.files[0]);
+        $.ajax({
+            url: 'http://aiche.chengcaibao.net/api/Image/Upload',
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false
+        }).done(function(res) {
+            console.log(res);
+            upPath = res;
+        }).fail(function(res) {
+            alert(res)
+        });
+    }
+
+
+    var path = '';
+
+    function fileup1(e) {
+        var formData = new FormData();
+        formData.append('file', e.target.files[0]);
+        $.ajax({
+            url: 'http://aiche.chengcaibao.net/api/Image/Upload',
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false
+        }).done(function(res) {
+            path = res;
+            $.ajax({
+                url: 'http://aiche.chengcaibao.net/api/user/UpdateDisplayName?UserName=17090098889&DisplayName=' + path,
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function(res) {
+                console.log(res);
+            }).fail(function(res) {
+                alert(res)
+            });
+
+        }).fail(function(res) {
+            alert(res)
+        });
+    }
+
+    function submit() {
+      var text= $('#text').val();
+      var textarea= $('#textarea').val();
+      if (text==''&path==''&upPath=='') {
+        alert('您没有做任何修改哦')
+      }else {
+        alert('提交成功')
+      }
+      // console.log(text);
+       //console.log(textarea);
+    }
+</script>
+
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav">
+        <a class="aui-pull-left" onclick="javascript:window.history.go(-1);">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        提现
+    </header>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        微信
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入微信号" id="text1">
+                    </div>
+                </div>
+            </li>
+            <br>
+            <p>
+                <div class="aui-btn aui-btn-info" style="left: 11rem;" tapmode onclick="btn1();">提现到微信</div>
+            </p>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        支付宝
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入支付宝号" id="text2">
+                    </div>
+                </div>
+            </li>
+            <br>
+            <p>
+                <div class="aui-btn aui-btn-info" style="left: 11rem;" tapmode onclick="btn2();">提现到支付宝</div>
+            </p>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script type="text/javascript">
+    function btn1() {
+        var text1 = $('#text1').val();
+        if (text1 == '') {
+            alert('请输入金额')
+        } else {
+            alert('已提交，待审核后到账')
+        }
+    }
+
+    function btn2() {
+        var text2 = $('#text2').val();
+        if (text2 == '') {
+            alert('请输入金额')
+        } else {
+            alert('已提交，待审核后到账')
+        }
+    }
+</script>
+
+</html>

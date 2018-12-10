@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        .file {
+            background: url('../image/jia.png') no-repeat center;
+            width: 200px;
+            height: 200px;
+            opacity: 0;
+        }
+
+        .upload {
+            padding: 4px 10px;
+            width: 80px;
+            height: 80px;
+            background: url('../image/jia.png') no-repeat center;
+            text-decoration: none;
+            color: #666;
+        }
+
+        .change {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <a class="aui-pull-left" onclick="javascript:window.history.go(-1);">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">发布产品</div>
+    </header>
+    <div class="aui-content-padded">
+        <br>
+        <div class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-form-list">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-input">
+                            <input type="text" placeholder="请输入产品标题">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-input">
+                            <input type="text" placeholder="请输入产品价格">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <a href="javascript:;" class="upload">
+            <input class="change" type="file" multiple="multiple" onchange="fileup(event)" />
+        </a>
+        <br>
+        <input class="aui-btn aui-btn-info aui-btn-block" type="submit" value="发布" tapmode onclick="submit();">
+    </div>
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        $(document).ready(function() {
+
+        });
+    }
+    var upPath = '';
+    function fileup(e) {
+        var formData = new FormData();
+        formData.append('file', e.target.files[0]);
+        $.ajax({
+            url: 'http://aiche.chengcaibao.net/api/Image/Upload',
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false
+        }).done(function(res) {
+            //console.log(res);
+            upPath = res;
+        }).fail(function(res) {
+            alert(res)
+        });
+    }
+
+    function submit() {
+        alert('上传成功路径为:'+upPath)
+    }
+</script>
+
+</html>

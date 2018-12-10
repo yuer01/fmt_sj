@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        .text-white {
+            color: #ffffff !important;
+        }
+
+        .aui-grid [class*=aui-col-] {
+            padding: 0.75rem 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <button class="aui-pull-right aui-btn aui-btn-outlined" tapmode onclick="exit();">退出</button>
+        <div class="aui-title">爱车小站欢迎您</div>
+    </header>
+    <div class="aui-list-item aui-list-item-middle" style="background-color: #7ac6e8">
+        <div class="aui-media-list-item-inner" style="height: 8rem;">
+            <div class="aui-list-item-media" style="width:3rem;">
+                <a href="perfect.html">
+                    <img src="../image/logo.png" class="aui-img-round">
+                </a>
+            </div>
+            <div class="aui-list-item-inner aui-list-item">
+                <div class="aui-list-item-text text-white">
+                    <div>
+                        <i class="aui-iconfont aui-icon-mobile aui-font-size-18" style="margin-left: 4rem;top:2.5rem;">15638519981</i>
+                    </div>
+                </div>
+                <div class="aui-list-item-text text-white aui-font-size-18" style="margin-left: 4rem;margin-top: 3rem;">
+                    余额：0
+                    <a href="withdraw.html">
+                        <div class="aui-btn aui-btn-info" style="margin-left: 1rem;">提现</div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <section class="aui-grid aui-margin-b-15">
+            <div class="aui-row">
+                <div class="aui-col-xs-4">
+                    <a href="release_commodity.html">
+                        <i class="aui-iconfont aui-icon-plus"></i>
+                        <div class="aui-grid-label">发布产品</div>
+                    </a>
+                </div>
+                <div class="aui-col-xs-4">
+                    <a href="my_commodity.html">
+                        <i class="aui-iconfont aui-icon-menu"></i>
+                        <div class="aui-grid-label">我的商品</div>
+                    </a>
+                </div>
+                <div class="aui-col-xs-4">
+                    <a href="bill_flow.html">
+                        <i class="aui-iconfont aui-icon-calendar"></i>
+                        <div class="aui-grid-label">账单流水</div>
+                    </a>
+                </div>
+                <div class="aui-col-xs-4">
+                    <a href="my_message.html">
+                        <div class="aui-badge">88</div>
+                        <i class="aui-iconfont aui-icon-wechat"></i>
+                        <div class="aui-grid-label">我的消息</div>
+                    </a>
+                </div>
+                <div class="aui-col-xs-4">
+                    <!-- <div class="aui-badge"></div> -->
+                    <a href="perfect.html">
+                        <i class="aui-iconfont aui-icon-my"></i>
+                        <div class="aui-grid-label">完善资料</div>
+                    </a>
+                </div>
+                <div class="aui-col-xs-4">
+                    <a href="change_password.html">
+                        <i class="aui-iconfont aui-icon-pencil"></i>
+                        <div class="aui-grid-label">修改密码</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script type="text/javascript">
+    //两个入口函数
+    apiready = function() {
+            $(document).ready(function() {
+                //判断是Android还是IOS
+                //alert(api.systemType)
+                var ajpush = api.require('ajpush');
+                //推送初始化
+                ajpush.init(function(ret) {
+                    if (ret && ret.status) {
+                        //注意安卓系统必须要这样
+                    }
+                });
+
+                //监听推送消息内容，点击跳转
+                api.addEventListener({
+                        name: 'appintent'
+                    }, function(ret, err) {
+                        if (ret && ret.appParam.ajpush) {
+                            //获取推送的内容
+                            var ajpush = ret.appParam.ajpush;
+                            var id = ajpush.id;
+                            var title = ajpush.title;
+                            var content = ajpush.content;
+                            var extra = ajpush.extra;
+                            //d点击推送消息跳转至
+                            // api.openWin({
+                            //     name: 'page1',
+                            //     url: './page1.html',
+                            //     pageParam: {
+                            //         name: 'test'
+                            //     }
+                            // });
+                        }
+                    })
+                    //获取当前打开app的 registrationId  后台通过他确认推送对象
+                ajpush.getRegistrationId(function(ret) {
+                    var registrationId = ret.id;
+                    //alert(registrationId)
+                    console.log(registrationId)
+                });
+
+                //两个监听事件
+                api.addEventListener({
+                    name: 'pause'
+                }, function(ret, err) {
+                    onPause();
+                    //监听应用进入后台，通知jpush暂停事件
+                })
+                api.addEventListener({
+                    name: 'resume'
+                }, function(ret, err) {
+                    onResume();
+                    //监听应用恢复到前台，通知jpush恢复事件
+                })
+            });
+        }
+        //退出
+    function exit() {
+        if (confirm("你确定要退出吗？")) {
+            api.openWin({
+                name: 'login',
+                url: 'login.html',
+            });
+
+        } else {
+            return false;
+        }
+    }
+
+    //极光推送的两个监听
+    //onPause 通知极光推送SDK当前应用退入到后台。
+    function onPause() {
+        api.addEventListener({
+            name: 'pause'
+        }, function(ret, err) {
+            var ajpush = api.require('ajpush');
+            ajpush.onPause();
+        });
+    }
+    //onResume 通知极光推送SDK当前应用恢复到前台。
+    function onResume() {
+        api.addEventListener({
+            name: 'resume'
+        }, function(ret, err) {
+            var ajpush = api.require('ajpush');
+            ajpush.onResume();
+        });
+    }
+</script>
+
+</html>
